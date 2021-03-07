@@ -11,15 +11,15 @@
 	</parent>
 
 	<groupId>net.finmath</groupId>
-	<artifactId>finmath-lib-cuda-extensions</artifactId>
+	<artifactId>finmath-lib-opencl-extensions</artifactId>
 	<version>5.0.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>finmath-lib-cuda-extensions</name>
+	<name>finmath-lib-opencl-extensions</name>
 	<description>
-		Vector class (RandomVariable) running on GPUs (Cuda and OpenCL). Enabling finmath lib with Cuda (via jcuda) and OpenCL (via jocl). - Running finmath lib models on a GPU.**
+		Vector class (RandomVariable) running on GPUs using OpenCL. Enabling finmath lib with OpenCL (via jocl). - Running finmath lib models on a GPU.**
 	</description>
-	<url>http://finmath.net/finmath-lib-cuda-extensions</url>
+	<url>http://finmath.net/finmath-lib-opencl-extensions</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,12 +72,6 @@
 			<groupId>net.finmath</groupId>
 			<artifactId>finmath-lib</artifactId>
 			<version>${finmath-lib.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jocl</groupId>
-			<artifactId>jocl</artifactId>
-			<version>2.0.4</version>
 		</dependency>
 
 		<dependency>
@@ -168,37 +162,13 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>${maven-release-plugin.version}</version>
 				<configuration>
-					<releaseProfiles>cuda-10.1</releaseProfiles>
+					<releaseProfiles>opencl-2.0</releaseProfiles>
 				</configuration>
 				<executions>
 					<execution>
-						<id>cuda-11.1</id>
+						<id>opencl-2.0</id>
 						<configuration>
-							<releaseProfiles>cuda-11.1</releaseProfiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>cuda-11.0</id>
-						<configuration>
-							<releaseProfiles>cuda-11.0</releaseProfiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>cuda-10.2</id>
-						<configuration>
-							<releaseProfiles>cuda-10.2</releaseProfiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>cuda-10.1</id>
-						<configuration>
-							<releaseProfiles>cuda-10.1</releaseProfiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>cuda-9.2</id>
-						<configuration>
-							<releaseProfiles>cuda-9.2</releaseProfiles>
+							<releaseProfiles>opencl-2.0</releaseProfiles>
 						</configuration>
 					</execution>
 				</executions>
@@ -325,10 +295,6 @@
 
 		<resources>
 			<resource>
-				<directory>src/main/cuda</directory>
-				<filtering>false</filtering>
-			</resource>
-			<resource>
 				<directory>src/main/opencl</directory>
 				<filtering>false</filtering>
 			</resource>
@@ -347,7 +313,7 @@
 						<excludePackageNames>net.finmath.montecarlo.automaticdifferentiation.backward.alternative:net.finmath.rootfinder</excludePackageNames>
 						<header>
 				   			<![CDATA[
-							<span class="logo-white">finMath</span><span class="logo-red"> lib</span> cuda-extensions documentation
+							<span class="logo-white">finMath</span><span class="logo-red"> lib</span> opencl-extensions documentation
 							<script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 				   			]]>
 						</header>
@@ -432,228 +398,55 @@
 			</properties>
 			<dependencies>
 				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>10.2.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>10.2.0</version>
+					<groupId>org.jocl</groupId>
+					<artifactId>jocl</artifactId>
+					<version>2.0.4</version>
 				</dependency>
 			</dependencies>
 		</profile>
 		<profile>
-			<id>cuda-11.1</id>
+			<id>opencl-1.0</id>
 			<activation>
 				<property>
-					<name>cuda.version</name>
-					<value>11.1</value>
+					<name>opencl.version</name>
+					<value>1.0</value>
 				</property>
 			</activation>
 			<properties>
-				<envClassifier>cuda-11.1</envClassifier>
+				<envClassifier>opencl-1.0</envClassifier>
 			</properties>
 			<dependencies>
 				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>11.1.1</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>11.1.1</version>
+					<groupId>org.jocl</groupId>
+					<artifactId>jocl</artifactId>
+					<version>2.0.4</version>
 				</dependency>
 			</dependencies>
 		</profile>
 		<profile>
-			<id>cuda-11.0</id>
+			<id>opencl-2.0</id>
 			<activation>
 				<property>
-					<name>cuda.version</name>
-					<value>11.0</value>
+					<name>opencl.version</name>
+					<value>2.0</value>
 				</property>
 			</activation>
 			<properties>
-				<envClassifier>cuda-11.0</envClassifier>
+				<envClassifier>opencl-2.0</envClassifier>
 			</properties>
 			<dependencies>
 				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>11.0.0</version>
+					<groupId>org.jocl</groupId>
+					<artifactId>jocl</artifactId>
+					<version>2.0.4</version>
 				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>11.0.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cuda-10.2</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value>10.2</value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>cuda-10.2</envClassifier>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>10.2.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>10.2.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cuda-10.1</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value>10.1</value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>cuda-10.1</envClassifier>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>10.1.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>10.1.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cuda-10.0</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value>10.0</value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>cuda-10.0</envClassifier>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>10.0.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>10.0.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cuda-9.2</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value>9.2</value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>cuda-9.2</envClassifier>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>0.9.2</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>0.9.2</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cuda-8.0</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value>8.0</value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>cuda-8.0</envClassifier>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>0.8.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>0.8.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>cuda-6.0</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value>6.0</value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>cuda-6.0</envClassifier>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>jcuda</groupId>
-					<artifactId>jcuda</artifactId>
-					<version>0.6.0</version>
-				</dependency>
-				<dependency>
-					<groupId>jcuda</groupId>
-					<artifactId>jcurand</artifactId>
-					<version>0.6.0</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>nocuda</id>
-			<activation>
-				<property>
-					<name>cuda.version</name>
-					<value></value>
-				</property>
-			</activation>
-			<properties>
-				<envClassifier>nocuda</envClassifier>
-			</properties>
-			<dependencies>
 			</dependencies>
 		</profile>
 	</profiles>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/finmath/finmath-lib-cuda-extensions/issues</url>
+		<url>https://github.com/finmath/finmath-lib-opencl-extensions/issues</url>
 	</issueManagement>
 
 	<reporting>
@@ -722,32 +515,17 @@
 		</plugins>
 	</reporting>
 
-	<repositories>
-		<repository>
-			<id>jcuda-6</id>
-			<url>
-				https://raw.githubusercontent.com/MysterionRise/mavenized-jcuda/master/repo
-			</url>
-		</repository>
-	</repositories>
-
 	<distributionManagement>
 		<site>
 			<id>github</id>
-			<url>scm:git:https://github.com/finmath/finmath-lib-cuda-extensions.git</url>
+			<url>scm:git:https://github.com/finmath/finmath-lib-opencl-extensions.git</url>
 		</site>
-		<!--
-		<site>
-			<id>finmath-cuda-extensions-site</id>
-			<url>scp://www.finmath.net/var/www/vhosts/finmath.net/httpdocs/finmath-lib-cuda-extensions/</url> 
-		</site>
-		-->
 	</distributionManagement>
 
 	<scm>
-		<url>https://github.com/finmath/finmath-lib-cuda-extensions</url>
-		<connection>scm:git:https://github.com/finmath/finmath-lib-cuda-extensions.git</connection>
-		<developerConnection>scm:git:https://github.com/finmath/finmath-lib-cuda-extensions.git</developerConnection>
+		<url>https://github.com/finmath/finmath-lib-opencl-extensions</url>
+		<connection>scm:git:https://github.com/finmath/finmath-lib-opencl-extensions.git</connection>
+		<developerConnection>scm:git:https://github.com/finmath/finmath-lib-opencl-extensions.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 </project>

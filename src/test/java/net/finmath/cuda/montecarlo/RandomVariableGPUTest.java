@@ -26,11 +26,10 @@ import net.finmath.opencl.montecarlo.RandomVariableOpenCLFactory;
 import net.finmath.stochastic.RandomVariable;
 
 /**
- * Test cases for the class net.finmath.montecarlo.opencl.RandomVariableOpenCL and net.finmath.montecarlo.cuda.RandomVariableCuda
+ * Test cases for the class net.finmath.montecarlo.opencl.RandomVariableOpenCL
  *
  * @author Christian Fries
  * @see net.finmath.opencl.montecarlo.RandomVariableOpenCL
- * @see net.finmath.cuda.montecarlo.RandomVariableCuda
  */
 @RunWith(Parameterized.class)
 public class RandomVariableGPUTest {
@@ -48,7 +47,6 @@ public class RandomVariableGPUTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 			{ "OpenCL", new RandomVariableOpenCLFactory() },
-			{ "Cuda", new RandomVariableCudaFactory() },
 		});
 	}
 
@@ -63,10 +61,6 @@ public class RandomVariableGPUTest {
 
 	@After
 	public void cleanUp() {
-		try {
-			RandomVariableCuda.purge();
-		}
-		catch(Exception | Error e) {}
 		try {
 			RandomVariableOpenCL.purge();
 		}

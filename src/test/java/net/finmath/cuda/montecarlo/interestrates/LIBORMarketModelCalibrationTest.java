@@ -25,8 +25,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import net.finmath.cpu.montecarlo.RandomVariableFloatFactory;
-import net.finmath.cuda.montecarlo.RandomVariableCuda;
-import net.finmath.cuda.montecarlo.RandomVariableCudaFactory;
 import net.finmath.exception.CalculationException;
 import net.finmath.functions.AnalyticFormulas;
 import net.finmath.marketdata.model.curves.DiscountCurve;
@@ -70,30 +68,24 @@ public class LIBORMarketModelCalibrationTest {
 		List<Object[]> testParameters = new ArrayList<>();
 
 		testParameters.addAll(Arrays.asList(new Object[][] {
-			{ ProcessingUnit.GPU_CUDA, 8192 },
 			{ ProcessingUnit.GPU_OPENCL, 8192 },
 			{ ProcessingUnit.CPU, 8192 },
 			//
-			{ ProcessingUnit.GPU_CUDA, 16384 },
 			{ ProcessingUnit.GPU_OPENCL, 16384 },
 			{ ProcessingUnit.CPU, 16384 },
 			//
-			{ ProcessingUnit.GPU_CUDA, 32768 },
 			{ ProcessingUnit.GPU_OPENCL, 32768 },
 			{ ProcessingUnit.CPU, 32768 },
 			//
-			{ ProcessingUnit.GPU_CUDA, 65536 },
 			{ ProcessingUnit.GPU_OPENCL, 65536 },
 			{ ProcessingUnit.CPU, 65536 },
 			//
-			{ ProcessingUnit.GPU_CUDA, 131072 },
 			{ ProcessingUnit.GPU_OPENCL, 131072 },
 			{ ProcessingUnit.CPU, 131072 },
 		}));
 
 		if(System.getProperty("net.finmath.cuda.montecarlo.interestrates.LIBORMarketModelCalibrationTest.testCases", "small").equalsIgnoreCase("large")) {
 			testParameters.addAll(Arrays.asList(new Object[][] {
-				{ ProcessingUnit.GPU_CUDA, 163840 },
 				{ ProcessingUnit.GPU_OPENCL, 163840 },
 				{ ProcessingUnit.CPU, 163840 },
 			}));
@@ -116,7 +108,6 @@ public class LIBORMarketModelCalibrationTest {
 
 	private enum ProcessingUnit {
 		CPU,
-		GPU_CUDA,
 		GPU_OPENCL,
 	}
 
@@ -167,10 +158,6 @@ public class LIBORMarketModelCalibrationTest {
 	@After
 	public void cleanUp() {
 		try {
-			RandomVariableCuda.purge();
-		}
-		catch(Exception | Error e) {}
-		try {
 			RandomVariableOpenCL.purge();
 		}
 		catch(Exception | Error e) {}
@@ -192,9 +179,6 @@ public class LIBORMarketModelCalibrationTest {
 		 */
 		RandomVariableFactory randomVariableFactory;
 		switch(processingUnit) {
-		case GPU_CUDA:
-			randomVariableFactory = new RandomVariableCudaFactory();
-			break;
 		case GPU_OPENCL:
 			randomVariableFactory = new RandomVariableOpenCLFactory();
 			break;

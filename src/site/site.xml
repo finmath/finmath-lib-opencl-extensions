@@ -11,8 +11,8 @@
 	</skin>
 
 	<bannerLeft>
-		<name>finmath lib cuda extensions</name>
-		<href>http://www.finmath.net/finmath-lib-cuda-extensions</href>
+		<name>finmath lib opencl extensions</name>
+		<href>http://www.finmath.net/finmath-lib-opencl-extensions</href>
 	</bannerLeft>
 	<bannerRight>
 		<name>finmath.net</name>
@@ -25,7 +25,7 @@
 			<item name="finmath.net" href="http://www.finmath.net/" />
 		</links>
 
-		<menu name="finmath lib cuda extensions">
+		<menu name="finmath lib opencl extensions">
 			<item name="Introduction" href="index.html" />
 			<item name="API Documentation" href="apidocs" />
 			<item name="Release Notes" href="releasenotes.html" />

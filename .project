@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>finmath-lib-cuda-extensions</name>
+	<name>finmath-lib-opencl-extensions</name>
 	<comment></comment>
 	<projects>
 	</projects>

@@ -104,7 +104,7 @@ import net.finmath.stochastic.RandomVariable;
 public class RandomVariableOpenCL implements RandomVariable {
 
 	/**
-	 * An object referencing a cuda device pointer.
+	 * An object referencing an OpenCL device pointer.
 	 *
 	 * This wrapper is mainly used to track, when references to device pointers are de-referenced, which then triggers
 	 * a recycling of the device vector.
@@ -128,7 +128,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 	 *
 	 * Implementation details:
 	 * The map vectorsToRecycleReferenceQueueMap maps each vector length to a ReferenceQueue&lt;DevicePointerReference&gt; holding
-	 * reference of recycleable vectors. The map vectorsInUseReferenceMap maps this weak reference to a Cuda vector.
+	 * reference of recycleable vectors. The map vectorsInUseReferenceMap maps this weak reference to an OpenCL vector.
 	 *
 	 * @author Christian Fries
 	 */
@@ -760,24 +760,22 @@ public class RandomVariableOpenCL implements RandomVariable {
 
 	private static long reduceGridSize;
 
-	// Initalize OpenCL
-
 	/**
-	 * Create a <code>RandomVariableCuda</code>.
+	 * Create a <code>RandomVariableOpenCL</code> implementing <code>RandomVariable</code>.
 	 *
 	 * @param time the filtration time, set to 0.0 if not used.
 	 * @param realizations A <code>DevicePointerReference</code> referencing a {@link cl_mem} with the given size. Use {@link #getDevicePointer(long)} to create one.
 	 * @param size The size of the vector associated with <code>DevicePointerReference</code>.
 	 * @param typePriority The priority of this type in construction of result types. See "operator type priority" for details.
-	 * @return A new instance of RandomVariableCuda wrapping the given DevicePointerReference.
+	 * @return A new instance of RandomVariableOpenCL wrapping the given DevicePointerReference.
 	 */
-	public static RandomVariableOpenCL of(final double time, final DevicePointerReference realizations, final long size, final int typePriority) {
+	private static RandomVariableOpenCL of(final double time, final DevicePointerReference realizations, final long size, final int typePriority) {
 		final RandomVariableOpenCL randomVariableOpenCL = new RandomVariableOpenCL(time, realizations, size, typePriority);
 		return randomVariableOpenCL;
 	}
 
 	/**
-	 * Create a <code>RandomVariableCuda</code>.
+	 * Create a <code>RandomVariableOpenCL</code> implementing <code>RandomVariable</code>.
 	 *
 	 * @param time the filtration time, set to 0.0 if not used.
 	 * @param realizations A <code>DevicePointerReference</code> referencing a {@link cl_mem} with the given size. Use {@link #getDevicePointer(long)} to create one.

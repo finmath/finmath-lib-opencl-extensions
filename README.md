@@ -1,43 +1,44 @@
-finmath lib cuda extensions
+finmath lib opencl extensions
 ==========
 
 ****************************************
 
-**Vector class (RandomVariable) running on GPUs (Cuda and OpenCL).**
+**Vector class (RandomVariable) running on GPUs using OpenCL.**
 
-**Enabling finmath lib with Cuda (via jcuda) and OpenCL (via jocl). - Running finmath lib models on a GPU.**
+**Enabling finmath lib with OpenCL (via jocl). - Running finmath lib models on a GPU.**
 
 ****************************************
 
-The *finmath lib cuda extensions* provide a Cuda implementation of the [finmath lib](http://finmath.net/finmath-lib/) interfaces `RandomVariable` and `BrownianMotion` compatible with finmath lib 4.0.12 or later
+The *finmath lib opencl extensions* provide an OpenCL implementation of the [finmath lib](http://finmath.net/finmath-lib/) interfaces `RandomVariable` and `BrownianMotion` compatible with finmath lib 5.1 or later
 (tested on GRID GPU Kepler GK105, GeForce GTX 1080, GeForce GT 750M).
 
 
 ### RandomVariable
 
 
-A `RandomVariableCudaFactory` is provided, which can be injected in any finmath lib model/algorithm using a random variable factory to construct `RandomVariable` objects. Objects created from this factory or from objects created from this factory perform their calculation on the GPU.
+A `RandomVariableOpenCLFactory` is provided, which can be injected in any finmath lib model/algorithm using a random variable factory to construct `RandomVariable` objects. Objects created from this factory or from objects created from this factory perform their calculation on the GPU.
 
-The implementation supports type priorities (see http://ssrn.com/abstract=3246127 ) and the default priority of `RandomVariableCuda` is 20. For example: operators involving CPU and GPU vectors will result in GPU vectors.
+The implementation supports type priorities (see http://ssrn.com/abstract=3246127 ) and the default priority of `RandomVariableOpenCL` is 20. For example: operators involving CPU and GPU vectors will result in GPU vectors.
 
-The `RandomVariableCudaFactory` can be combined with *algorithmic differentiation* AAD wrappers, for example `RandomVariableDifferentiableAAD`, to allow algorithmic differentiation together with calculations performed on the GPU. For the type priority: objects allowing for algorithmic differentiation (AAD) have higher priority, AAD on GPU has higher priority than AAD on CPU.
+The `RandomVariableOpenCLFactory` can be combined with *algorithmic differentiation* AAD wrappers, for example `RandomVariableDifferentiableAAD`, to allow algorithmic differentiation together with calculations performed on the GPU. For the type priority: objects allowing for algorithmic differentiation (AAD) have higher priority, AAD on GPU has higher priority than AAD on CPU.
 
 
 ### BrownianMotion
 
 
-In addition, objects of type `BrownianMotion` are also taking the role of a factory for objects of type `RandomVariable`. Thus, injecting the `BrownianMotionCuda` into classes consuming a `BrownianMotion` will result in finmath-lib models performing their calculations on the GPU - seamlessly.
+In addition, objects of type `BrownianMotion` are also taking the role of a factory for objects of type `RandomVariable`. Thus, injecting the `BrownianMotionOpenCL` into classes consuming a `BrownianMotion` will result in finmath-lib models performing their calculations on the GPU - seamlessly.
 
 Distribution
 -------------------------------------
 
-finmath-lib-cuda-extensions is distributed through the central Maven repository. It's coordinates are:
+finmath-lib-opencl-extensions is distributed through the central Maven repository. It's coordinates are:
 
     <groupId>net.finmath</groupId>
-    <artifactId>finmath-lib-cuda-extensions</artifactId>
-	<version>4.0.11</version>
+    <artifactId>finmath-lib-opencl-extensions</artifactId>
+	<version>5.1.1</version>
 
-Note: For Cuda 10.0 use version 4.0.10.
+The project is currently build for OpenCL 2.0.
+For other Cuda versions use the Maven command line property `cuda.version` set to one of `8.0`, `9.2`, `10.0`, `10.1`, `10.2` and the Maven classifyer `cuda-${cuda.version}`.
 
 Example
 -------------------------------------
@@ -45,7 +46,7 @@ Example
 Create a vector of floats on the GPU device
 
 ```
-RandomVariableInterface randomVariable = new RandomVariableCuda(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
+RandomVariableInterface randomVariable = new RandomVariableOpenCL(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
 ```
 
 perform some calculations (still on the GPU device)
@@ -80,11 +81,11 @@ on the Maven command line.
 
 To build the project yourself and run the unit tests from the source repository:
 
-Obtain the finmath-lib-cuda-extensions source
+Obtain the finmath-lib-opencl-extensions source
 
 ```
-git clone https://github.com/finmath/finmath-lib-cuda-extensions.git
-cd finmath-lib-cuda-extensions
+git clone https://github.com/finmath/finmath-lib-opencl-extensions.git
+cd finmath-lib-opencl-extensions
 ```
 
 ...then build the code.
@@ -93,19 +94,18 @@ cd finmath-lib-cuda-extensions
 mvn clean package
 ```
 
-This will build the version using Cuda 10.1. For Cuda 10.0 use
+This will build the version using OpenCL 2.0. For OpenCL 1.0 use
 
 ```
-mvn -Dcuda.version=10.0 clean package
+mvn -Dopencl.version=1.0 clean package
 ```
 
 If everything goes well, you will see unit test run. Note that some of the tests may fail if the device (GPU) has not enough memory. 
 
-
 Trying on Amazon EC2
 -------------------------------------
 
-If you do not have a machine with NVidia Cuda 10.0 at hand, you may try out the finmath-lib-cuda-extensions on an Amazon EC2 machine. To do so:
+If you do not have a machine with a suitable GPU at hand, you may try out the finmath-lib-opencl-extensions on an Amazon EC2 machine. To do so:
 
 * Create an Amazon AWS account (if needed) an go to your AWS console.
 * Select to start an EC2 virtual server.
@@ -113,8 +113,7 @@ If you do not have a machine with NVidia Cuda 10.0 at hand, you may try out the 
   - Filter the list of images (AMI) using `gpu` and select - e.g. - `Deep Learning Base AMI (Ubuntu) Version 19.0`.
   - Filter the list of servers using the "GPU instances" and select an instance.
 * Login to your GPU instance.
-* Check that you have cuda 10.0 (e.g. use `nvcc --version`)
-* Try finmath-lib-cuda-extensions as described in the previous section.
+* Try finmath-lib-opencl-extensions as described in the previous section.
 
 Performance
 -------------------------------------
@@ -128,9 +127,8 @@ Running net.finmath.montecarlo.BrownianMotionTest
 Test of performance of BrownianMotionLazyInit                  	..........test took 49.057 sec.
 Test of performance of BrownianMotionJavaRandom                	..........test took 65.558 sec.
 Test of performance of BrownianMotionCudaWithHostRandomVariable	..........test took 4.633 sec.
-Test of performance of BrownianMotionCudaWithRandomVariableCuda	..........test took 2.325 sec.
+Test of performance of BrownianMotionCudaWithRandomVariableOpenCL	..........test took 2.325 sec.
 ```
-
 
 ### Unit test for Monte-Carlo simulation
 
@@ -140,14 +138,14 @@ Running net.finmath.montecarlo.assetderivativevaluation.MonteCarloBlackScholesMo
 BrownianMotionLazyInit                    calculation time =  4.00 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899.
 BrownianMotionJavaRandom                  calculation time =  5.19 sec   value Monte-Carlo =  0.1901	 value analytic    =  0.1899	.
 BrownianMotionCudaWithHostRandomVariable  calculation time =  2.50 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899.
-BrownianMotionCudaWithRandomVariableCuda  calculation time =  0.09 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899	.
+BrownianMotionCudaWithRandomVariableOpenCL  calculation time =  0.09 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899	.
 ```
 
 Remark:
 * `BrownianMotionLazyInit`: Calculation on CPU, using Mersenne Twister.
 * `BrownianMotionJavaRandom`: Calculation on CPU, using Java random number generator (LCG).
 * `BrownianMotionCudaWithHostRandomVariable`: Calculation on CPU and GPU: Random number generator on GPU, Simulation on CPU.
-* `BrownianMotionCudaWithRandomVariableCuda`: Calculation on GPU: Random number generator on GPU, Simulation on GPU.
+* `BrownianMotionCudaWithRandomVariableOpenCL`: Calculation on GPU: Random number generator on GPU, Simulation on GPU.
 
 
 ### Unit test for LIBOR Market Model calibration
@@ -185,70 +183,26 @@ Calibration to Swaptions using GPU    calculation time =  51.70 sec    RMS Error
 (LIBOR Market Model with stochastic volatility, 6 factors, 163840 paths)
 
 
-Profiles for Other Cuda Versions
+Profiles for Other OpenCL Versions
 -------------------------------------
 
-The default profile will build the version using Cuda 10.1.
+The default profile will build the version using OpenCL 2.0 (it is compatible with OpenCL 1.0 and should run with older versions).
 
-#### Cuda 10.0
+#### OpenCL 1.0
 
-For Cuda 10.0 use
-
-```
-mvn -Pcuda-10.0 clean package
-```
-
-or
+For OpenCL 1.0 use
 
 ```
-mvn -Dcuda.version=10.0 clean package
+mvn -Dopencl.version=1.0 clean package
 ```
 
-#### Cuda 9.2
+#### OpenCL 2.0
 
-For Cuda 9.2 use
-
-```
-mvn -Pcuda-9.2 clean package
-```
-
-or
+For OpenCL 2.0 use
 
 ```
-mvn -Dcuda.version=9.2 clean package
+mvn -Dopencl.version=2.0 clean package
 ```
-
-#### Cuda 8.0
-
-For Cuda 8.0 use
-
-```
-mvn -P cuda-8.0 clean package
-```
-
-or
-
-```
-mvn -Dcuda.version=8.0 clean package
-```
-
-#### Cuda 6.0
-
-For Cuda 6.0 use
-
-```
-mvn -P cuda-6.0 clean package
-```
-
-or
-
-```
-mvn -Dcuda.version=6.0 clean package
-```
-
-
-For Cuda 6.0 the jcuda binaries are not unpacked automatically and have to be installed manually. Set LD_LIBRARY_PATH (*nix environment variable) or java.library.path (Java system property) to the jcuda platform specific binaries.
-
 
 
 References
