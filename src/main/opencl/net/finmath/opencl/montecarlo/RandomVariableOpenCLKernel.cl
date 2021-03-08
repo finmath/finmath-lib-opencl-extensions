@@ -81,14 +81,14 @@ __kernel void cuExp(__global const float *a, __global float *result)
 {
     size_t i = get_global_id(0);
 
-    result[i] = exp((double)a[i]);
+    result[i] = exp(a[i]);
 }
 
 __kernel void cuLog(__global const float *a, __global float *result)
 {
     size_t i = get_global_id(0);
 
-    result[i] = log((double)a[i]);
+    result[i] = log(a[i]);
 }
 
 __kernel void invert(__global const float *a, __global float *result)
