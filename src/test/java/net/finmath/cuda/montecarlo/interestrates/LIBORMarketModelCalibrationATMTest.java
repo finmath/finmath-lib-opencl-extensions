@@ -454,7 +454,7 @@ public class LIBORMarketModelCalibrationATMTest {
 
 		System.out.print("\t Calculation time: ");
 		System.out.printf("rate curves: %6.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
-		System.out.printf("volatilities: %6.2f s, ", (millisCalibrationEnd-millisCalibrationStart)/1000.0 + " s.");
+		System.out.printf("volatilities: %6.2f s, ", (millisCalibrationEnd-millisCalibrationStart)/1000.0);
 
 		final double averageDeviation = deviationSum/calibrationProducts.size();
 		System.out.print("\t Deviation: ");
