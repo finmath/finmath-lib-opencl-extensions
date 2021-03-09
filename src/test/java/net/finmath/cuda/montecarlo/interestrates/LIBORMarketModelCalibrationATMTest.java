@@ -170,7 +170,6 @@ public class LIBORMarketModelCalibrationATMTest {
 		final DiscountCurve discountCurve = curveModel.getDiscountCurve("discountCurve-EUR");
 
 		final long millisCurvesEnd = System.currentTimeMillis();
-		System.out.println();
 
 		/*
 		 * Calibration of model volatilities
@@ -371,7 +370,9 @@ public class LIBORMarketModelCalibrationATMTest {
 		final EulerSchemeFromProcessModel process = new EulerSchemeFromProcessModel(liborMarketModelCalibrated, brownianMotion);
 		final LIBORModelMonteCarloSimulationModel simulationCalibrated = new LIBORMonteCarloSimulationFromLIBORModel(process);
 
-		System.out.println("\nValuation on calibrated model:");
+		if(isPrintResults) {
+			System.out.println("\nValuation on calibrated model:");
+		}
 		double deviationSum			= 0.0;
 		double deviationSquaredSum	= 0.0;
 		for (int i = 0; i < calibrationProducts.size(); i++) {
@@ -445,9 +446,9 @@ public class LIBORMarketModelCalibrationATMTest {
 		}
 
 		System.out.println("Calibration to Swaptions:");
-		System.out.printf("%-10s: %15s, ", "model:", modelType);
-		System.out.printf("%-10s: %15s, ", "calib:", calibrationProductType);
-		System.out.printf("%-10s: %15s, ", "method:", randomVariableType);
+		System.out.printf("%8s: %-12s ", "model", modelType);
+		System.out.printf("%8s: %-12s ", "calib", calibrationProductType);
+		System.out.printf("%8s: %-12s ", "method", randomVariableType);
 
 		System.out.print("\t Calculation time: ");
 		System.out.printf("rate curves: %6.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
@@ -625,7 +626,10 @@ public class LIBORMarketModelCalibrationATMTest {
 		 */
 		final Solver solver = new Solver(model, calibrationProducts, 0.0, 1E-4 /* target accuracy */);
 		final AnalyticModel calibratedModel = solver.getCalibratedModel(curvesToCalibrate);
-		System.out.println("Solver reported acccurary....: " + solver.getAccuracy());
+		if(isPrintResults) {
+			System.out.println("Calibration of rate curves:");
+			System.out.println("Solver reported acccurary....: " + solver.getAccuracy());
+		}
 
 		Assert.assertEquals("Calibration accurarcy", 0.0, solver.getAccuracy(), 1E-3);
 
@@ -644,9 +648,8 @@ public class LIBORMarketModelCalibrationATMTest {
 		}
 		final double rms = Math.sqrt(squaredErrorSum/calibrationProducts.size());
 
-		System.out.println("Independent checked acccurary: " + rms);
-
 		if(isPrintResults) {
+			System.out.println("Independent checked acccurary: " + rms);
 			System.out.println("Calibrated discount curve: ");
 			for(int i=0; i<curveMaturities.length; i++) {
 				final double maturity = curveMaturities[i];
