@@ -127,11 +127,13 @@ public class LIBORMarketModelCalibrationATMTest {
 
 	private final LIBORMarketModelType modelType;
 	private final CalibrationProductType calibrationProductType;
+	private final RandomVariableType randomVariableType;
 
 	public LIBORMarketModelCalibrationATMTest(LIBORMarketModelType modelType, CalibrationProductType calibrationProductType, RandomVariableType randomVariableType) {
 		super();
 		this.modelType = modelType;
 		this.calibrationProductType = calibrationProductType;
+		this.randomVariableType = randomVariableType;
 		this.randomVariableFactory = (randomVariableType == RandomVariableType.CPU) ? new RandomVariableFromArrayFactory() : new RandomVariableOpenCLFactory();
 	}
 
@@ -157,16 +159,10 @@ public class LIBORMarketModelCalibrationATMTest {
 		/*
 		 * Calibration test
 		 */
-		System.out.println("Calibration to Swaptions:");
-		System.out.println("\tModel..................: " + modelType);
-		System.out.println("\tCalibration products...: " + calibrationProductType);
-		System.out.println();
 
 		/*
 		 * Calibration of rate curves
 		 */
-		System.out.println("Calibration of rate curves:");
-
 		final AnalyticModel curveModel = getCalibratedCurve();
 
 		// Create the forward curve (initial value of the LIBOR market model)
@@ -179,7 +175,6 @@ public class LIBORMarketModelCalibrationATMTest {
 		/*
 		 * Calibration of model volatilities
 		 */
-		System.out.println("Calibration of model volatilities:");
 
 		/*
 		 * Create a set of calibration products.
@@ -279,7 +274,7 @@ public class LIBORMarketModelCalibrationATMTest {
 		 */
 		// If simulation time is below libor time, exceptions will be hard to track.
 		final double lastTime	= 40.0;
-		final double dt		= 1.00;
+		final double dt		= 0.5;
 		final TimeDiscretizationFromArray timeDiscretization = new TimeDiscretizationFromArray(0.0, (int) (lastTime / dt), dt);
 		final TimeDiscretization liborPeriodDiscretization = timeDiscretization;
 
@@ -449,14 +444,20 @@ public class LIBORMarketModelCalibrationATMTest {
 			}
 		}
 
+		System.out.println("Calibration to Swaptions:");
+		System.out.printf("%-10s: %15s, ", "model:", modelType);
+		System.out.printf("%-10s: %15s, ", "calib:", calibrationProductType);
+		System.out.printf("%-10s: %15s, ", "method:", randomVariableType);
 
-		System.out.println("Time required for calibration of curves.........: " + (millisCurvesEnd-millisCurvesStart)/1000.0 + " s.");
-		System.out.println("Time required for calibration of volatilities...: " + (millisCalibrationEnd-millisCalibrationStart)/1000.0 + " s.");
+		System.out.print("\t Calculation time: ");
+		System.out.printf("rate curves: %6.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
+		System.out.printf("volatilities: %6.2f s, ", (millisCalibrationEnd-millisCalibrationStart)/1000.0 + " s.");
 
 		final double averageDeviation = deviationSum/calibrationProducts.size();
-		System.out.println("Mean Deviation:" + formatterValue.format(averageDeviation));
-		System.out.println("RMS Error.....:" + formatterValue.format(Math.sqrt(deviationSquaredSum/calibrationProducts.size())));
-		System.out.println("__________________________________________________________________________________________\n");
+		System.out.print("\t Deviation: ");
+		System.out.printf("mean: %6.3f, ", averageDeviation);
+		System.out.printf("rms: %6.3f", (Math.sqrt(deviationSquaredSum/calibrationProducts.size())));
+		System.out.println();
 
 		Assert.assertTrue(Math.abs(averageDeviation) < 2E-4);
 	}
