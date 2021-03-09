@@ -10,7 +10,31 @@ finmath lib opencl extensions
 ****************************************
 
 The *finmath lib opencl extensions* provide an OpenCL implementation of the [finmath lib](http://finmath.net/finmath-lib/) interfaces `RandomVariable` and `BrownianMotion` compatible with finmath lib 5.1 or later
-(tested on GRID GPU Kepler GK105, GeForce GTX 1080, GeForce GT 750M).
+(tested on GRID GPU Kepler GK105, GeForce GTX 1080, GeForce GT 750M, AMD Radeon Pro 560, Apple M1).
+
+Performance Characteristics
+-------------------------------------
+
+The current implementation uses very small OpenCL kernels which affects the performance. This may be optimized quite straight forwardly in future version.
+This implies a specific performance characteristic: the OpenCL communication overhead constitutes a certain amount of "fixed costs".
+Depending on GPU and CPU specifics the performance is at par for Monte Carlo simulations with 5000 paths.
+However, for larger number of paths, the CPU scales linear, while the GPU show almost no change. That is, For a
+Monte-Carlo simulation with 50000 paths, the GPU is 10 times faster than the CPU. For 100000 paths, the GPU is 20 times faster than the CPU.
+
+
+### Limitations
+
+
+The main limitation is GPU memory. RandomVariable objects are held on the GPU and keept as long as they are referenced.
+Since multiple processes may aquire GPU memory, it may be less clear how much GPU memory is available.
+Larger Monte-Carlo simulations may require 12 GB or more of GPU memory.
+
+Another aspect that may affect the performance is the OpenCL implementation.
+
+<div style="clear: both;"/>
+
+Interfaces for which OpenCL Implementations are Provided
+-------------------------------------
 
 
 ### RandomVariable
@@ -35,10 +59,8 @@ finmath-lib-opencl-extensions is distributed through the central Maven repositor
 
     <groupId>net.finmath</groupId>
     <artifactId>finmath-lib-opencl-extensions</artifactId>
-	<version>5.1.1</version>
 
 The project is currently build for OpenCL 2.0.
-For other Cuda versions use the Maven command line property `cuda.version` set to one of `8.0`, `9.2`, `10.0`, `10.1`, `10.2` and the Maven classifyer `cuda-${cuda.version}`.
 
 Example
 -------------------------------------
@@ -46,7 +68,7 @@ Example
 Create a vector of floats on the GPU device
 
 ```
-RandomVariableInterface randomVariable = new RandomVariableOpenCL(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
+RandomVariable randomVariable = new RandomVariableOpenCL(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
 ```
 
 perform some calculations (still on the GPU device)
@@ -74,10 +96,6 @@ Installation / Build
 -------------------------------------
 
 Binary distribution is available via Maven central.
-
-You have to have NVIDIA Cuda 10.1 installed. The Maven configuration comes with profiles for Cuda 8.0, 9.2, 10.0 and 10.1.
-If you like to use a different version, you can try to switch the JCuda version by setting the property cuda.version
-on the Maven command line.
 
 To build the project yourself and run the unit tests from the source repository:
 
@@ -127,8 +145,9 @@ Running net.finmath.montecarlo.BrownianMotionTest
 Test of performance of BrownianMotionLazyInit                  	..........test took 49.057 sec.
 Test of performance of BrownianMotionJavaRandom                	..........test took 65.558 sec.
 Test of performance of BrownianMotionCudaWithHostRandomVariable	..........test took 4.633 sec.
-Test of performance of BrownianMotionCudaWithRandomVariableOpenCL	..........test took 2.325 sec.
+Test of performance of BrownianMotionCudaWithRandomVariableCuda	..........test took 2.325 sec.
 ```
+
 
 ### Unit test for Monte-Carlo simulation
 
@@ -146,6 +165,7 @@ Remark:
 * `BrownianMotionJavaRandom`: Calculation on CPU, using Java random number generator (LCG).
 * `BrownianMotionCudaWithHostRandomVariable`: Calculation on CPU and GPU: Random number generator on GPU, Simulation on CPU.
 * `BrownianMotionCudaWithRandomVariableOpenCL`: Calculation on GPU: Random number generator on GPU, Simulation on GPU.
+
 
 
 ### Unit test for LIBOR Market Model calibration
@@ -188,7 +208,9 @@ Profiles for Other OpenCL Versions
 
 The default profile will build the version using OpenCL 2.0 (it is compatible with OpenCL 1.0 and should run with older versions).
 
+
 #### OpenCL 1.0
+
 
 For OpenCL 1.0 use
 
@@ -196,7 +218,9 @@ For OpenCL 1.0 use
 mvn -Dopencl.version=1.0 clean package
 ```
 
+
 #### OpenCL 2.0
+
 
 For OpenCL 2.0 use
 
@@ -219,7 +243,7 @@ Some topics come with additional documentations (technical papers).
 License
 -------
 
-The code of "finmath lib", "finmath experiments" and "finmath lib cuda extensions" (packages
+The code of "finmath lib", "finmath lib opencl extensions" and "finmath lib cuda extensions" (packages
 `net.finmath.*`) are distributed under the [Apache License version
 2.0](http://www.apache.org/licenses/LICENSE-2.0.html), unless otherwise explicitly stated.
 

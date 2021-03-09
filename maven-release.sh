@@ -2,7 +2,7 @@
 # This script performs a release for multiple profiles
 #
 # Before running this script you should check the profiles via
-# 	mvn test -Dcuda.version=10.0
+# 	mvn test -Dopencl.version=2.0
 # and
 # 	mvn test
 #
@@ -11,7 +11,7 @@
 # before running this script and check if this is successful.
 #
 # To re-release a given tag / version you need to run
-# 	git checkout finmath-lib-<verion>
+# 	git checkout finmath-lib-opencl-extensions-<verion>
 # before running this script.
 #
 # If this script is run on a newly setup system, the following things need to be setup:
@@ -39,12 +39,10 @@ mvn release:perform
 
 # deploy the other profiles (we do this skipping tests)
 cd target/checkout/
-mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dcuda.version=6.0 -DskipTests=true
-mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dcuda.version=8.0 -DskipTests=true
-mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dcuda.version=9.2 -DskipTests=true
-mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dcuda.version=10.1 -DskipTests=true
-mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dcuda.version=10.2 -DskipTests=true
+mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dopencl.version=1.0 -DskipTests=true
+mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dopencl.version=2.0 -DskipTests=true
 mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -DskipTests=true
 
 # deploy site (clover:instrument takes a long time)
-mvn clover:instrument site site:stage site-deploy
+mvn clover:instrument
+mvn site site:stage site-deploy
