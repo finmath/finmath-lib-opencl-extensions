@@ -52,6 +52,7 @@ import net.finmath.marketdata.products.Swap;
 import net.finmath.marketdata.products.SwapAnnuity;
 import net.finmath.montecarlo.BrownianMotion;
 import net.finmath.montecarlo.RandomVariableFactory;
+import net.finmath.montecarlo.RandomVariableFromArrayFactory;
 import net.finmath.montecarlo.interestrate.CalibrationProduct;
 import net.finmath.montecarlo.interestrate.LIBORMarketModel;
 import net.finmath.montecarlo.interestrate.LIBORModelMonteCarloSimulationModel;
@@ -99,13 +100,19 @@ public class LIBORMarketModelCalibrationATMTest {
 		ANALYTIC,
 	}
 
-	@Parameters(name="Model: {0}, Calibration: {1}")
+	public enum RandomVariableType {
+		GPU,
+		CPU,
+	}
+
+	@Parameters(name="Model: {0}, Calibration: {1}, Device: {2}")
 	public static Collection<Object[]> data() {
 		final Collection<Object[]> testParameters = new ArrayList<>();
 
-		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.MONTECARLO });
-		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.ANALYTIC });
-		testParameters.add(new Object[] { LIBORMarketModelType.DISPLACED, CalibrationProductType.MONTECARLO });
+		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.MONTECARLO, RandomVariableType.GPU });
+		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.MONTECARLO, RandomVariableType.CPU });
+		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.ANALYTIC, RandomVariableType.CPU });
+//		testParameters.add(new Object[] { LIBORMarketModelType.DISPLACED, CalibrationProductType.MONTECARLO });
 
 		return testParameters;
 	}
@@ -116,16 +123,16 @@ public class LIBORMarketModelCalibrationATMTest {
 	private static DecimalFormat formatterParam		= new DecimalFormat(" #0.000;-#0.000", new DecimalFormatSymbols(Locale.ENGLISH));
 	private static DecimalFormat formatterDeviation	= new DecimalFormat(" 0.00000E00;-0.00000E00", new DecimalFormatSymbols(Locale.ENGLISH));
 
-//	private final RandomVariableFactory randomVariableFactory = new RandomVariableFromArrayFactory();
-	private final RandomVariableFactory randomVariableFactory = new RandomVariableOpenCLFactory();
+	private final RandomVariableFactory randomVariableFactory;
 
 	private final LIBORMarketModelType modelType;
 	private final CalibrationProductType calibrationProductType;
 
-	public LIBORMarketModelCalibrationATMTest(LIBORMarketModelType modelType, CalibrationProductType calibrationProductType) {
+	public LIBORMarketModelCalibrationATMTest(LIBORMarketModelType modelType, CalibrationProductType calibrationProductType, RandomVariableType randomVariableType) {
 		super();
 		this.modelType = modelType;
 		this.calibrationProductType = calibrationProductType;
+		this.randomVariableFactory = (randomVariableType == RandomVariableType.CPU) ? new RandomVariableFromArrayFactory() : new RandomVariableOpenCLFactory();
 	}
 
 
@@ -142,7 +149,7 @@ public class LIBORMarketModelCalibrationATMTest {
 	public void testATMSwaptionCalibration() throws CalculationException, SolverException {
 
 		// Small number of path, to reduce runtime of the unit test. Calibration should use 10 to 100 times more.
-		final int numberOfPaths		= 1000;
+		final int numberOfPaths		= 50000;
 		final int numberOfFactors	= 1;
 
 		final long millisCurvesStart = System.currentTimeMillis();
@@ -272,7 +279,7 @@ public class LIBORMarketModelCalibrationATMTest {
 		 */
 		// If simulation time is below libor time, exceptions will be hard to track.
 		final double lastTime	= 40.0;
-		final double dt		= 0.25;
+		final double dt		= 1.00;
 		final TimeDiscretizationFromArray timeDiscretization = new TimeDiscretizationFromArray(0.0, (int) (lastTime / dt), dt);
 		final TimeDiscretization liborPeriodDiscretization = timeDiscretization;
 
