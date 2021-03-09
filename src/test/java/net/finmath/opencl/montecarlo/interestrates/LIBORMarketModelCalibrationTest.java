@@ -1,4 +1,4 @@
-package net.finmath.cuda.montecarlo.interestrates;
+package net.finmath.opencl.montecarlo.interestrates;
 /*
  * (c) Copyright Christian P. Fries, Germany. All rights reserved. Contact: email@christian-fries.de.
  *

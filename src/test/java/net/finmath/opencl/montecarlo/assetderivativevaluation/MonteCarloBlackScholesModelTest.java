@@ -4,7 +4,7 @@
  * Created on 15.06.2016
  */
 
-package net.finmath.cuda.montecarlo.assetderivativevaluation;
+package net.finmath.opencl.montecarlo.assetderivativevaluation;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;

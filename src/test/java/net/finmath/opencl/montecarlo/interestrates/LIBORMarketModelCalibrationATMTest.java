@@ -3,7 +3,7 @@
  *
  * Created on 16.01.2015
  */
-package net.finmath.cuda.montecarlo.interestrates;
+package net.finmath.opencl.montecarlo.interestrates;
 
 import static org.junit.Assert.fail;
 
