@@ -112,7 +112,7 @@ public class LIBORMarketModelCalibrationATMTest {
 		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.MONTECARLO, RandomVariableType.GPU });
 		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.MONTECARLO, RandomVariableType.CPU });
 		testParameters.add(new Object[] { LIBORMarketModelType.NORMAL, CalibrationProductType.ANALYTIC, RandomVariableType.CPU });
-//		testParameters.add(new Object[] { LIBORMarketModelType.DISPLACED, CalibrationProductType.MONTECARLO });
+		//		testParameters.add(new Object[] { LIBORMarketModelType.DISPLACED, CalibrationProductType.MONTECARLO });
 
 		return testParameters;
 	}
@@ -428,7 +428,9 @@ public class LIBORMarketModelCalibrationATMTest {
 		if(liborMarketModelFromSerialization != null) {
 			final LIBORModelMonteCarloSimulationModel simulationFromSerialization = new LIBORMonteCarloSimulationFromLIBORModel(liborMarketModelFromSerialization, new EulerSchemeFromProcessModel(liborMarketModelFromSerialization, brownianMotion));
 
-			System.out.println("\nComparing deserialized model with original model (deviation).");
+			if(isPrintResults) {
+				System.out.println("\nComparing deserialized model with original model (deviation).");
+			}
 			for (int i = 0; i < calibrationProducts.size(); i++) {
 				final AbstractLIBORMonteCarloProduct calibrationProduct = calibrationProducts.get(i).getProduct();
 				try {
