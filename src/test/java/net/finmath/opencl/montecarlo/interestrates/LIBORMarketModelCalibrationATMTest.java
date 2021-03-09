@@ -448,18 +448,19 @@ public class LIBORMarketModelCalibrationATMTest {
 		}
 
 		System.out.println("Calibration to Swaptions:");
+		System.out.printf("%8s: %-12s ", "device", randomVariableType);
 		System.out.printf("%8s: %-12s ", "model", modelType);
 		System.out.printf("%8s: %-12s ", "calib", calibrationProductType);
-		System.out.printf("%8s: %-12s ", "method", randomVariableType);
-
-		System.out.print("\t Calculation time: ");
-		System.out.printf("rate curves: %6.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
-		System.out.printf("volatilities: %6.2f s, ", (millisCalibrationEnd-millisCalibrationStart)/1000.0);
+		System.out.printf("%8s: %-12d ", "paths", numberOfPaths);
+		
+		System.out.print("\t Calibration time: ");
+		System.out.printf("rate curves: %5.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
+		System.out.printf("volatilities: %7.2f s, ", (millisCalibrationEnd-millisCalibrationStart)/1000.0);
 
 		final double averageDeviation = deviationSum/calibrationProducts.size();
 		System.out.print("\t Deviation: ");
-		System.out.printf("mean: %6.3f, ", averageDeviation);
-		System.out.printf("rms: %6.3f", (Math.sqrt(deviationSquaredSum/calibrationProducts.size())));
+		System.out.printf("mean: %6.3e, ", averageDeviation);
+		System.out.printf("rms: %6.3e", (Math.sqrt(deviationSquaredSum/calibrationProducts.size())));
 		System.out.println();
 
 		Assert.assertTrue(Math.abs(averageDeviation) < 2E-4);
