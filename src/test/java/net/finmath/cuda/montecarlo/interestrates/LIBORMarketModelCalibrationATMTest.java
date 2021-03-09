@@ -445,9 +445,9 @@ public class LIBORMarketModelCalibrationATMTest {
 		}
 
 		System.out.println("Calibration to Swaptions:");
-		System.out.printf("%-10s: %15s, ", "model:", modelType);
-		System.out.printf("%-10s: %15s, ", "calib:", calibrationProductType);
-		System.out.printf("%-10s: %15s, ", "method:", randomVariableType);
+		System.out.printf("%8s: %-12s ", "model", modelType);
+		System.out.printf("%8s: %-12s ", "calib", calibrationProductType);
+		System.out.printf("%8s: %-12s ", "method", randomVariableType);
 
 		System.out.print("\t Calculation time: ");
 		System.out.printf("rate curves: %6.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
