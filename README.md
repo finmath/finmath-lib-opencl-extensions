@@ -12,6 +12,8 @@ finmath lib opencl extensions
 The *finmath lib opencl extensions* provide an OpenCL implementation of the [finmath lib](http://finmath.net/finmath-lib/) interfaces `RandomVariable` and `BrownianMotion` compatible with finmath lib 5.1 or later
 (tested on GRID GPU Kepler GK105, GeForce GTX 1080, GeForce GT 750M, AMD Radeon Pro 560, Apple M1).
 
+For Cuda support see finmath-lib-cuda-extensions.
+
 Performance Characteristics
 -------------------------------------
 
