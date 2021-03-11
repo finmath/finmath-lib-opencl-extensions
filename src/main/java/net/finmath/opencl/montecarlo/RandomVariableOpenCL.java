@@ -170,6 +170,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 
 			final String	openCLDeviceTypeString = System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType", "GPU");
 			final int		openCLDeviceIndex = Integer.parseInt(System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType", "-1"));
+			logger.config("Configured class with device type " + openCLDeviceTypeString + " and device index " + openCLDeviceIndex);
 
 			final long deviceType;
 			switch(openCLDeviceTypeString) {
@@ -187,7 +188,6 @@ public class RandomVariableOpenCL implements RandomVariable {
 
 			final int platformIndex = 0;
 			final int deviceIndex;		// will be a property.
-
 
 			// Enable exceptions
 			CL.setExceptionsEnabled(true);
@@ -210,6 +210,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 			final int[] numDevicesArray = new int[1];
 			clGetDeviceIDs(platform, deviceType, 0, null, numDevicesArray);
 			final int numDevices = numDevicesArray[0];
+			logger.config("Found " + numDevices + " of device type " + openCLDeviceTypeString);
 
 			// Obtain a device ID
 			final cl_device_id[] devices = new cl_device_id[numDevices];
@@ -221,6 +222,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 			 * This is useful on a MacBook Pro, where the ATI Card is the second gpu, s.th. you use type = GPU, index = -1.
 			 */
 			deviceIndex = openCLDeviceIndex >= 0 ? openCLDeviceIndex : devices.length + openCLDeviceIndex;
+			logger.config("Using device " + deviceIndex + " of device type " + openCLDeviceTypeString);
 			device = devices[deviceIndex];
 
 			// Create a context for the selected device
