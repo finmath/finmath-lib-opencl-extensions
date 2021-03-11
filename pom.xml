@@ -12,7 +12,7 @@
 
 	<groupId>net.finmath</groupId>
 	<artifactId>finmath-lib-opencl-extensions</artifactId>
-	<version>5.0.6-SNAPSHOT</version>
+	<version>5.1.1</version>
 	<packaging>jar</packaging>
 
 	<name>finmath-lib-opencl-extensions</name>
@@ -526,6 +526,6 @@
 		<url>https://github.com/finmath/finmath-lib-opencl-extensions</url>
 		<connection>scm:git:https://github.com/finmath/finmath-lib-opencl-extensions.git</connection>
 		<developerConnection>scm:git:https://github.com/finmath/finmath-lib-opencl-extensions.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>finmath-lib-opencl-extensions-5.1.1</tag>
 	</scm>
 </project>
