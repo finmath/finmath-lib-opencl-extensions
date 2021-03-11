@@ -112,7 +112,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 	private static class DevicePointerReference {
 		private final cl_mem devicePointer;
 
-		public DevicePointerReference(final cl_mem devicePointer) {
+		DevicePointerReference(final cl_mem devicePointer) {
 			this.devicePointer = devicePointer;
 		}
 
@@ -166,7 +166,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 		private long	deviceAllocMemoryBytes = 0;
 		private long	deviceMaxMemoryBytes;
 
-		public DeviceMemoryPool() {
+		DeviceMemoryPool() {
 
 			final String	openCLDeviceTypeString = System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType", "GPU");
 			final int		openCLDeviceIndex = Integer.parseInt(System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType", "-1"));
@@ -515,7 +515,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 				throw new NullPointerException("Unable to get device pointer.");
 			}
 			try {
-				deviceExecutor.submit(() -> 
+				deviceExecutor.submit(() ->
 				clEnqueueWriteBuffer(commandQueue, devicePointerReference.get(), CL_TRUE, 0L,
 						(long)values.length  * Sizeof.cl_float, Pointer.to(values), 0, null, null)
 						).get();
@@ -538,144 +538,129 @@ public class RandomVariableOpenCL implements RandomVariable {
 				logger.severe("Unable to a create device pointer for vector of size " + size);
 				throw new RuntimeException(e.getCause());
 			}
-//			System.out.println(java.util.Arrays.toString(result));
+			//			System.out.println(java.util.Arrays.toString(result));
 			return result;
 		}
 
 		public DevicePointerReference callFunctionv1s0(final cl_kernel function, final long resultSize, final DevicePointerReference argument1) {
-			//			synchronized (lock) 
-			{
-				final DevicePointerReference result = getDevicePointer(resultSize);
-				deviceExecutor.submit(() -> {
-					clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
-					clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(result.get()));
+			final DevicePointerReference result = getDevicePointer(resultSize);
+			deviceExecutor.submit(() -> {
+				clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
+				clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(result.get()));
 
-					// Set the work-item dimensions
-					final long[] globalWorkSize = new long[]{ resultSize };
-					final long[] localWorkSize = null;
-					//cuCtxSynchronize();
-					// Launching on the same stream (default stream)
-					try {
-						clEnqueueNDRangeKernel(commandQueue, function, 1, null,
-								globalWorkSize, localWorkSize, 0, null, null);
-					}
-					catch(Exception e) {
-						logger.severe("Command " + function + " failed.");
-						throw new RuntimeException(e.getCause());
-					}
-				});
-				return result;
-			}
+				// Set the work-item dimensions
+				final long[] globalWorkSize = new long[]{ resultSize };
+				final long[] localWorkSize = null;
+				//cuCtxSynchronize();
+				// Launching on the same stream (default stream)
+				try {
+					clEnqueueNDRangeKernel(commandQueue, function, 1, null,
+							globalWorkSize, localWorkSize, 0, null, null);
+				}
+				catch(Exception e) {
+					logger.severe("Command " + function + " failed.");
+					throw new RuntimeException(e.getCause());
+				}
+			});
+			return result;
 		}
 
 		public DevicePointerReference callFunctionv2s0(final cl_kernel function, final long resultSize, final DevicePointerReference argument1, final DevicePointerReference argument2) {
-			//			synchronized (lock)
-			{
-				final DevicePointerReference result = getDevicePointer(resultSize);
-				deviceExecutor.submit(() -> {
-					clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
-					clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(argument2.get()));
-					clSetKernelArg(function, 2, Sizeof.cl_mem, Pointer.to(result.get()));
+			final DevicePointerReference result = getDevicePointer(resultSize);
+			deviceExecutor.submit(() -> {
+				clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
+				clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(argument2.get()));
+				clSetKernelArg(function, 2, Sizeof.cl_mem, Pointer.to(result.get()));
 
-					// Set the work-item dimensions
-					final long[] globalWorkSize = new long[]{ resultSize };
-					final long[] localWorkSize = null;
-					//cuCtxSynchronize();
-					// Launching on the same stream (default stream)
-					try {
-						clEnqueueNDRangeKernel(commandQueue, function, 1, null,
-								globalWorkSize, localWorkSize, 0, null, null);
-					}
-					catch(Exception e) {
-						logger.severe("Command " + function + " failed.");
-						throw new RuntimeException(e.getCause());
-					}
-				});
-				return result;
-			}
+				// Set the work-item dimensions
+				final long[] globalWorkSize = new long[]{ resultSize };
+				final long[] localWorkSize = null;
+				//cuCtxSynchronize();
+				// Launching on the same stream (default stream)
+				try {
+					clEnqueueNDRangeKernel(commandQueue, function, 1, null,
+							globalWorkSize, localWorkSize, 0, null, null);
+				}
+				catch(Exception e) {
+					logger.severe("Command " + function + " failed.");
+					throw new RuntimeException(e.getCause());
+				}
+			});
+			return result;
 		}
 
 		public DevicePointerReference callFunctionv3s0(final cl_kernel function, final long resultSize, final DevicePointerReference argument1, final DevicePointerReference argument2, final DevicePointerReference argument3) {
-			//			synchronized (lock)
-			{
-				final DevicePointerReference result = getDevicePointer(resultSize);
-				deviceExecutor.submit(() -> {
-					clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
-					clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(argument2.get()));
-					clSetKernelArg(function, 2, Sizeof.cl_mem, Pointer.to(argument3.get()));
-					clSetKernelArg(function, 3, Sizeof.cl_mem, Pointer.to(result.get()));
+			final DevicePointerReference result = getDevicePointer(resultSize);
+			deviceExecutor.submit(() -> {
+				clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
+				clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(argument2.get()));
+				clSetKernelArg(function, 2, Sizeof.cl_mem, Pointer.to(argument3.get()));
+				clSetKernelArg(function, 3, Sizeof.cl_mem, Pointer.to(result.get()));
 
-					// Set the work-item dimensions
-					final long[] globalWorkSize = new long[]{ resultSize };
-					final long[] localWorkSize = null;
-					//cuCtxSynchronize();
-					// Launching on the same stream (default stream)
-					try {
-						clEnqueueNDRangeKernel(commandQueue, function, 1, null,
-								globalWorkSize, localWorkSize, 0, null, null);
-					}
-					catch(Exception e) {
-						logger.severe("Command " + function + " failed.");
-						throw new RuntimeException(e.getCause());
-					}
-				});
-				return result;
-			}
+				// Set the work-item dimensions
+				final long[] globalWorkSize = new long[]{ resultSize };
+				final long[] localWorkSize = null;
+				//cuCtxSynchronize();
+				// Launching on the same stream (default stream)
+				try {
+					clEnqueueNDRangeKernel(commandQueue, function, 1, null,
+							globalWorkSize, localWorkSize, 0, null, null);
+				}
+				catch(Exception e) {
+					logger.severe("Command " + function + " failed.");
+					throw new RuntimeException(e.getCause());
+				}
+			});
+			return result;
 		}
 
 		public DevicePointerReference callFunctionv1s1(final cl_kernel function, final long resultSize, final DevicePointerReference argument1, final double value) {
-			//			synchronized (lock)
-			{
-				final DevicePointerReference result = getDevicePointer(resultSize);
-				deviceExecutor.submit(() -> {
-					clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
-					clSetKernelArg(function, 1, Sizeof.cl_float, Pointer.to(new float[] { (float)value }));
-					clSetKernelArg(function, 2, Sizeof.cl_mem, Pointer.to(result.get()));
+			final DevicePointerReference result = getDevicePointer(resultSize);
+			deviceExecutor.submit(() -> {
+				clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
+				clSetKernelArg(function, 1, Sizeof.cl_float, Pointer.to(new float[] { (float)value }));
+				clSetKernelArg(function, 2, Sizeof.cl_mem, Pointer.to(result.get()));
 
-					// Set the work-item dimensions
-					final long[] globalWorkSize = new long[]{ resultSize };
-					final long[] localWorkSize = null;
-					//cuCtxSynchronize();
-					// Launching on the same stream (default stream)
-					try {
-						clEnqueueNDRangeKernel(commandQueue, function, 1, null,
-								globalWorkSize, localWorkSize, 0, null, null);
-					}
-					catch(Exception e) {
-						logger.severe("Command " + function + " failed.");
-						throw new RuntimeException(e.getCause());
-					}
-				});
-				return result;
-			}
+				// Set the work-item dimensions
+				final long[] globalWorkSize = new long[]{ resultSize };
+				final long[] localWorkSize = null;
+				//cuCtxSynchronize();
+				// Launching on the same stream (default stream)
+				try {
+					clEnqueueNDRangeKernel(commandQueue, function, 1, null,
+							globalWorkSize, localWorkSize, 0, null, null);
+				}
+				catch(Exception e) {
+					logger.severe("Command " + function + " failed.");
+					throw new RuntimeException(e.getCause());
+				}
+			});
+			return result;
 		}
 
 		public DevicePointerReference callFunctionv2s1(final cl_kernel function, final long resultSize, final DevicePointerReference argument1, final DevicePointerReference argument2, final double value) {
-			//			synchronized (lock)
-			{
-				final DevicePointerReference result = getDevicePointer(resultSize);
-				deviceExecutor.submit(() -> {
-					clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
-					clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(argument2.get()));
-					clSetKernelArg(function, 2, Sizeof.cl_float, Pointer.to(new float[] { (float)value }));
-					clSetKernelArg(function, 3, Sizeof.cl_mem, Pointer.to(result.get()));
+			final DevicePointerReference result = getDevicePointer(resultSize);
+			deviceExecutor.submit(() -> {
+				clSetKernelArg(function, 0, Sizeof.cl_mem, Pointer.to(argument1.get()));
+				clSetKernelArg(function, 1, Sizeof.cl_mem, Pointer.to(argument2.get()));
+				clSetKernelArg(function, 2, Sizeof.cl_float, Pointer.to(new float[] { (float)value }));
+				clSetKernelArg(function, 3, Sizeof.cl_mem, Pointer.to(result.get()));
 
-					// Set the work-item dimensions
-					final long[] globalWorkSize = new long[]{ resultSize };
-					final long[] localWorkSize = null;
-					//cuCtxSynchronize();
-					// Launching on the same stream (default stream)
-					try {
-						clEnqueueNDRangeKernel(commandQueue, function, 1, null,
-								globalWorkSize, localWorkSize, 0, null, null);
-					}
-					catch(Exception e) {
-						logger.severe("Command " + function + " failed.");
-						throw new RuntimeException(e.getCause());
-					}
-				});
-				return result;
-			}
+				// Set the work-item dimensions
+				final long[] globalWorkSize = new long[]{ resultSize };
+				final long[] localWorkSize = null;
+				//cuCtxSynchronize();
+				// Launching on the same stream (default stream)
+				try {
+					clEnqueueNDRangeKernel(commandQueue, function, 1, null,
+							globalWorkSize, localWorkSize, 0, null, null);
+				}
+				catch(Exception e) {
+					logger.severe("Command " + function + " failed.");
+					throw new RuntimeException(e.getCause());
+				}
+			});
+			return result;
 		}
 
 		public void callFunction(final cl_kernel function, final long resultSize, final Pointer[] arguments, final int[] argumentSizes) {
@@ -1881,7 +1866,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 		});
 		return deviceMemoryPool.getValuesAsFloat(result, 1)[0];
 
-//		return of(-Double.MAX_VALUE, result, 2*reduceGridSize).getRealizations()[0];
+		//		return of(-Double.MAX_VALUE, result, 2*reduceGridSize).getRealizations()[0];
 	}
 
 	private RandomVariableOpenCL reduceBySize(final int bySize) {
