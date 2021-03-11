@@ -1,6 +1,8 @@
 finmath lib opencl extensions
 ==========
 
+Project home page: https://finmath.net/finmath-lib-opencl-extensions
+
 ****************************************
 
 **Vector class (RandomVariable) running on GPUs using OpenCL.**
