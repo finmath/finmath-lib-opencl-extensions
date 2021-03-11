@@ -43,9 +43,7 @@ Another aspect that may affect the performance is the OpenCL implementation.
 Interfaces for which OpenCL Implementations are Provided
 -------------------------------------
 
-
 ### RandomVariable
-
 
 A `RandomVariableOpenCLFactory` is provided (implementing `RandomVariableFactory`), which can be injected in any finmath lib model/algorithm using a random variable factory to construct `RandomVariable` objects.
 
@@ -147,7 +145,6 @@ You may run dedicated tests using
   - `-Dtest=LIBORMarketModelCalibrationTest`
 
 The last tests are computationally heavy Monte-Carlo interest rate models. The test may fail on devices that lack sufficient memory.
-
 
 Trying on Amazon EC2
 -------------------------------------

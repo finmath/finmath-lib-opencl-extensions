@@ -95,6 +95,19 @@ double[] result = randomVariable.getRealizations();
 
 (note: the result is always double, since different implementation may support float or double on the device).
 
+#[[
+### RandomVariableFactory
+]]#
+
+A better approach is to use a `RandomVariableFactory` instead of a constructor. You may then write your program in terms of the `RandomVariableFactory` interface:
+
+
+```
+RandomVariableFactory randomVariableFactory = new RandomVariableOpenCLFactory();
+RandomVariable randomVariable = randomVariableFactory.L(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
+```
+
+
 Installation / Build
 -------------------------------------
 
