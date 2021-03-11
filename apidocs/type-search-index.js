@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"net.finmath.opencl.montecarlo","l":"RandomVariableOpenCL"},{"p":"net.finmath.opencl.montecarlo","l":"RandomVariableOpenCLFactory"}]
