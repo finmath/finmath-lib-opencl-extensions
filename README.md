@@ -17,7 +17,9 @@ For Cuda support see finmath-lib-cuda-extensions.
 Performance Characteristics
 -------------------------------------
 
-The current implementation uses very small OpenCL kernels which affects the performance. This may be optimized quite straight forwardly in future version.
+<img src="images/LIBORMarketModelCalibrationATMTest-Graph.png" style="width: 50%; float: right;"/>
+
+The current implementation uses very small OpenCL kernels which affects the performance. This may be optimized quite straight forwardly in future versions.
 This implies a specific performance characteristic: the OpenCL communication overhead constitutes a certain amount of "fixed costs".
 Depending on GPU and CPU specifics the performance is at par for Monte Carlo simulations with 5000 paths.
 However, for larger number of paths, the CPU scales linear, while the GPU show almost no change. That is, For a
@@ -27,9 +29,10 @@ Monte-Carlo simulation with 50000 paths, the GPU is 10 times faster than the CPU
 ### Limitations
 
 
-The main limitation is GPU memory. RandomVariable objects are held on the GPU and keept as long as they are referenced.
+The main limitation is GPU memory. RandomVariable objects are held on the GPU and kept as long as they are referenced.
 Since multiple processes may aquire GPU memory, it may be less clear how much GPU memory is available.
-Larger Monte-Carlo simulations may require 12 GB or more of GPU memory.
+
+You may check the memory profile of your calculation by running it on a CPU - the requirements are comparable.
 
 Another aspect that may affect the performance is the OpenCL implementation.
 
@@ -42,17 +45,14 @@ Interfaces for which OpenCL Implementations are Provided
 ### RandomVariable
 
 
-A `RandomVariableOpenCLFactory` is provided, which can be injected in any finmath lib model/algorithm using a random variable factory to construct `RandomVariable` objects. Objects created from this factory or from objects created from this factory perform their calculation on the GPU.
+A `RandomVariableOpenCLFactory` is provided (implementing `RandomVariableFactory`), which can be injected in any finmath lib model/algorithm using a random variable factory to construct `RandomVariable` objects.
+
+Objects created from this factory or from objects created from this factory perform their calculation on the OpenCL device (GPU).
 
 The implementation supports type priorities (see http://ssrn.com/abstract=3246127 ) and the default priority of `RandomVariableOpenCL` is 20. For example: operators involving CPU and GPU vectors will result in GPU vectors.
 
 The `RandomVariableOpenCLFactory` can be combined with *algorithmic differentiation* AAD wrappers, for example `RandomVariableDifferentiableAAD`, to allow algorithmic differentiation together with calculations performed on the GPU. For the type priority: objects allowing for algorithmic differentiation (AAD) have higher priority, AAD on GPU has higher priority than AAD on CPU.
 
-
-### BrownianMotion
-
-
-In addition, objects of type `BrownianMotion` are also taking the role of a factory for objects of type `RandomVariable`. Thus, injecting the `BrownianMotionOpenCL` into classes consuming a `BrownianMotion` will result in finmath-lib models performing their calculations on the GPU - seamlessly.
 
 Distribution
 -------------------------------------
@@ -122,6 +122,31 @@ mvn -Dopencl.version=1.0 clean package
 
 If everything goes well, you will see unit test run. Note that some of the tests may fail if the device (GPU) has not enough memory. 
 
+Trying more
+-------------------------------------
+
+You may turn on logging using `-Djava.util.logging.config.file=logging.properties`. To try different configurations you may use
+
+  - `-Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=GPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=0`
+  - `-Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=CPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=0`
+  - `-Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=GPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=1`
+
+for example
+  
+```
+mvn clean install test -Djava.util.logging.config.file=logging.properties -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=GPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=1
+```
+
+You may run dedicated tests using
+
+  - `-Dtest=RandomVariableGPUTest`
+  - `-Dtest=MonteCarloBlackScholesModelTest`
+  - `-Dtest=LIBORMarketModelCalibrationATMTest`
+  - `-Dtest=LIBORMarketModelCalibrationTest`
+
+The last tests are computationally heavy Monte-Carlo interest rate models. The test may fail on devices that lack sufficient memory.
+
+
 Trying on Amazon EC2
 -------------------------------------
 
@@ -138,51 +163,18 @@ If you do not have a machine with a suitable GPU at hand, you may try out the fi
 Performance
 -------------------------------------
 
+### Unit test for LIBOR Market Model calibration: Parametric model with Stochastic Volatility.
 
-### Unit test for random number generation:
-
-
-```
-Running net.finmath.montecarlo.BrownianMotionTest
-Test of performance of BrownianMotionLazyInit                  	..........test took 49.057 sec.
-Test of performance of BrownianMotionJavaRandom                	..........test took 65.558 sec.
-Test of performance of BrownianMotionCudaWithHostRandomVariable	..........test took 4.633 sec.
-Test of performance of BrownianMotionCudaWithRandomVariableCuda	..........test took 2.325 sec.
-```
-
-
-### Unit test for Monte-Carlo simulation
-
-
-```
-Running net.finmath.montecarlo.assetderivativevaluation.MonteCarloBlackScholesModelTest
-BrownianMotionLazyInit                    calculation time =  4.00 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899.
-BrownianMotionJavaRandom                  calculation time =  5.19 sec   value Monte-Carlo =  0.1901	 value analytic    =  0.1899	.
-BrownianMotionCudaWithHostRandomVariable  calculation time =  2.50 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899.
-BrownianMotionCudaWithRandomVariableOpenCL  calculation time =  0.09 sec   value Monte-Carlo =  0.1898	 value analytic    =  0.1899	.
-```
-
-Remark:
-* `BrownianMotionLazyInit`: Calculation on CPU, using Mersenne Twister.
-* `BrownianMotionJavaRandom`: Calculation on CPU, using Java random number generator (LCG).
-* `BrownianMotionCudaWithHostRandomVariable`: Calculation on CPU and GPU: Random number generator on GPU, Simulation on CPU.
-* `BrownianMotionCudaWithRandomVariableOpenCL`: Calculation on GPU: Random number generator on GPU, Simulation on GPU.
-
-
-
-### Unit test for LIBOR Market Model calibration
-
-
-There is also a unit test performing a brute force Monte-Carlo calibration of a LIBOR Market Model with stochastic volatility on the CPU and the GPU. Note however that the unit test uses a too small size for the number of simulation paths, such that the GPU code is no improvement over the CPU code. The unit test shows that CPU and GPU give consistent results.
+There are also a unit tests performing a brute force Monte-Carlo calibration of a LIBOR Market Model / discrete term structure model, with stochastic volatility.
 
 The performance of a brute-force Monte-Carlo calibration with 80K and 160K paths are given below. Note: if the number of paths is increased, the GPU time remains almost the same (given that the GPU has sufficient memory), while the CPU time grows linearly. This is due to the fact that the GPU performance has a large part of fixed management overhead (which will be reduced in future versions).
 
 The CPU version was run on a an Intel i7-7800X 3.5 GHz using multi-threadded calibration.
 THe GPU version was run on an nVidia GeForce GTX 1080.
 
-
+#[[
 #### LMM with 81,920 paths
-
+]]#
 
 ```
 Running net.finmath.montecarlo.interestrates.LIBORMarketModelCalibrationTest
@@ -192,9 +184,7 @@ Calibration to Swaptions using GPU    calculation time =  49.46 sec    RMS Error
 ```
 (LIBOR Market Model with stochastic volatility, 6 factors, 81920 paths)
 
-
 #### LMM with 163,840 paths
-
 
 ```
 Running net.finmath.montecarlo.interestrates.LIBORMarketModelCalibrationTest
@@ -205,14 +195,29 @@ Calibration to Swaptions using GPU    calculation time =  51.70 sec    RMS Error
 (LIBOR Market Model with stochastic volatility, 6 factors, 163840 paths)
 
 
+### Unit test for LIBOR Market Model calibration: Model with High Number of Parameters with Piecewise-Constant Volatility Surface
+
+```
+Running net.finmath.montecarlo.interestrates.LIBORMarketModelCalibrationATMTest
+
+OpenCL on GPU   number of paths: 5000	Computation time: 	322.99	 sec.	Deviation:	mean:	5.290e-07,	rms:	6.54E-05
+OpenCL on GPU   number of paths: 12500	Computation time: 	334.53	 sec.	Deviation:	mean:	3.782e-07,	rms:	6.90E-05
+OpenCL on GPU   number of paths: 25000	Computation time: 	255.47	 sec.	Deviation:	mean:	3.026e-07,	rms:	6.61E-05
+OpenCL on GPU   number of paths: 50000	Computation time: 	256.69	 sec.	Deviation:	mean:	3.248e-07,	rms:	6.59E-05
+OpenCL on GPU   number of paths: 100000	Computation time: 	256.15	 sec.	Deviation:	mean:	3.733e-07,	rms:	6.49E-05
+CPU             number of paths: 5000	Computation time: 	181.8	 sec.	Deviation:	mean:	5.386e-07,	rms:	6.54E-05
+CPU             number of paths: 12500	Computation time: 	564.56	 sec.	Deviation:	mean:	3.805e-07,	rms:	6.90E-05
+CPU             number of paths: 25000	Computation time: 	761.94	 sec.	Deviation:	mean:	3.024e-07,	rms:	6.61E-05
+CPU             number of paths: 50000	Computation time: 	1561.47	 sec.	Deviation:	mean:	3.249e-07,	rms:	6.59E-05
+CPU             number of paths: 100000	Computation time: 	3857.36	 sec.	Deviation:	mean:	3.742e-07,	rms:	6.49E-05
+```
+
 Profiles for Other OpenCL Versions
 -------------------------------------
 
 The default profile will build the version using OpenCL 2.0 (it is compatible with OpenCL 1.0 and should run with older versions).
 
-
 #### OpenCL 1.0
-
 
 For OpenCL 1.0 use
 
@@ -220,9 +225,7 @@ For OpenCL 1.0 use
 mvn -Dopencl.version=1.0 clean package
 ```
 
-
 #### OpenCL 2.0
-
 
 For OpenCL 2.0 use
 

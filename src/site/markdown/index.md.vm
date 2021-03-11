@@ -123,6 +123,32 @@ mvn -Dopencl.version=1.0 clean package
 
 If everything goes well, you will see unit test run. Note that some of the tests may fail if the device (GPU) has not enough memory. 
 
+
+Trying more
+-------------------------------------
+
+You may turn on logging using `-Djava.util.logging.config.file=logging.properties`. To try different configurations you may use
+
+  - `-Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=GPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=0`
+  - `-Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=CPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=0`
+  - `-Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=GPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=1`
+
+for example
+  
+```
+mvn clean install test -Djava.util.logging.config.file=logging.properties -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType=GPU -Dnet.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex=1
+```
+
+You may run dedicated tests using
+
+  - `-Dtest=RandomVariableGPUTest`
+  - `-Dtest=MonteCarloBlackScholesModelTest`
+  - `-Dtest=LIBORMarketModelCalibrationATMTest`
+  - `-Dtest=LIBORMarketModelCalibrationTest`
+
+The last tests are computationally heavy Monte-Carlo interest rate models. The test may fail on devices that lack sufficient memory.
+
+
 Trying on Amazon EC2
 -------------------------------------
 
