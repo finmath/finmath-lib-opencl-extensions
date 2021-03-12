@@ -128,7 +128,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 	 *
 	 * Implementation details:
 	 * The map vectorsToRecycleReferenceQueueMap maps each vector length to a ReferenceQueue&lt;DevicePointerReference&gt; holding
-	 * reference of recycleable vectors. The map vectorsInUseReferenceMap maps this weak reference to an OpenCL vector.
+	 * reference of recyclable vectors. The map vectorsInUseReferenceMap maps this weak reference to an OpenCL vector.
 	 *
 	 * @author Christian Fries
 	 */
@@ -169,7 +169,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 		DeviceMemoryPool() {
 
 			final String	openCLDeviceTypeString = System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType", "GPU");
-			final int		openCLDeviceIndex = Integer.parseInt(System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceType", "-1"));
+			final int		openCLDeviceIndex = Integer.parseInt(System.getProperty("net.finmath.montecarlo.opencl.RandomVariableOpenCL.deviceIndex", "-1"));
 			logger.config("Configured class with device type " + openCLDeviceTypeString + " and device index " + openCLDeviceIndex);
 
 			final long deviceType;
