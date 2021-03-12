@@ -104,9 +104,17 @@ A better approach is to use a `RandomVariableFactory` instead of a constructor. 
 
 ```
 RandomVariableFactory randomVariableFactory = new RandomVariableOpenCLFactory();
-RandomVariable randomVariable = randomVariableFactory.L(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
+```
+and then
+```
+RandomVariable randomVariable = randomVariableFactory.createRandomVariable(new float[] {-4.0f, -2.0f, 0.0f, 2.0f, 4.0f} );
 ```
 
+If you write your code in terms of the `RandomVariableFactory` interface you may easily switch your implementations by using one of the following factories:
+
+- `RandomVariableOpenCLFactory` - OpenCL vectors running on an OpenCL device (GPU or CPU).
+- `RandomVariableFromArrayFactory` - Java floating point array (single or double precision).
+- `RandomVariableDifferentiableAADFactory` - Endowing any of the above with adjoint algorithmic differentiation.
 
 Installation / Build
 -------------------------------------
