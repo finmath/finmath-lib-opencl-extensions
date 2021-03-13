@@ -6,6 +6,7 @@ module net.finmath.opencl {
 
 	requires java.logging;
 	requires org.apache.commons.io;
+	requires commons.math3;
 
 	requires jocl;
 }

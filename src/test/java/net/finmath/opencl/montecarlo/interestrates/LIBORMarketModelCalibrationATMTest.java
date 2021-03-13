@@ -452,7 +452,7 @@ public class LIBORMarketModelCalibrationATMTest {
 		System.out.printf("%8s: %-12s ", "model", modelType);
 		System.out.printf("%8s: %-12s ", "calib", calibrationProductType);
 		System.out.printf("%8s: %-12d ", "paths", numberOfPaths);
-		
+
 		System.out.print("\t Calibration time: ");
 		System.out.printf("rate curves: %5.2f s, ", (millisCurvesEnd-millisCurvesStart)/1000.0);
 		System.out.printf("volatilities: %7.2f s, ", (millisCalibrationEnd-millisCalibrationStart)/1000.0);

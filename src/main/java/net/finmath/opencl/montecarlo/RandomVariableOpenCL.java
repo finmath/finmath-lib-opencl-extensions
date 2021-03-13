@@ -1355,6 +1355,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 		}
 	}
 
+	@Override
 	public RandomVariable bus(final double value) {
 		if(isDeterministic()) {
 			final double newValueIfNonStochastic = -valueIfNonStochastic + value;
@@ -1390,6 +1391,7 @@ public class RandomVariableOpenCL implements RandomVariable {
 		}
 	}
 
+	@Override
 	public RandomVariable vid(final double value) {
 		if(isDeterministic()) {
 			final double newValueIfNonStochastic = value / valueIfNonStochastic;
