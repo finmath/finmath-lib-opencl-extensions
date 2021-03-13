@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import net.finmath.cpu.montecarlo.RandomVariableFloatFactory;
 import net.finmath.exception.CalculationException;
 import net.finmath.functions.AnalyticFormulas;
 import net.finmath.marketdata.model.curves.DiscountCurve;
@@ -46,6 +45,7 @@ import net.finmath.montecarlo.interestrate.models.covariance.LIBORCovarianceMode
 import net.finmath.montecarlo.interestrate.products.SwaptionSimple;
 import net.finmath.montecarlo.interestrate.products.TermStructureMonteCarloProduct;
 import net.finmath.montecarlo.process.EulerSchemeFromProcessModel;
+import net.finmath.opencl.cpu.montecarlo.RandomVariableFloatFactory;
 import net.finmath.opencl.montecarlo.RandomVariableOpenCL;
 import net.finmath.opencl.montecarlo.RandomVariableOpenCLFactory;
 import net.finmath.optimizer.LevenbergMarquardt;

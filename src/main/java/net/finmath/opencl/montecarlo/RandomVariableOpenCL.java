@@ -55,8 +55,8 @@ import org.jocl.cl_mem;
 import org.jocl.cl_platform_id;
 import org.jocl.cl_program;
 
-import net.finmath.cpu.montecarlo.RandomVariableFromFloatArray;
 import net.finmath.functions.DoubleTernaryOperator;
+import net.finmath.opencl.cpu.montecarlo.RandomVariableFromFloatArray;
 import net.finmath.stochastic.RandomVariable;
 
 /**
