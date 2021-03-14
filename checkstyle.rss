@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2021 finmath.net</copyright>
     <item>
-      <title>File: 6,
+      <title>File: 0,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -44,90 +44,6 @@ under the License.
             </tr>
           </thead>
           <tbody>
-                          <tr>
-                <td>
-                  <a href="http://finmath.net/finmath-lib-opencl-extensions/checkstyle.html#net.finmath.opencl.cpu.montecarlo.RandomVariableFromFloatArray.java">net/finmath/opencl/cpu/montecarlo/RandomVariableFromFloatArray.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://finmath.net/finmath-lib-opencl-extensions/checkstyle.html#net.finmath.opencl.cpu.montecarlo.RandomVariableFloatFactory.java">net/finmath/opencl/cpu/montecarlo/RandomVariableFloatFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://finmath.net/finmath-lib-opencl-extensions/checkstyle.html#net.finmath.opencl.cpu.montecarlo.package-info.java">net/finmath/opencl/cpu/montecarlo/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://finmath.net/finmath-lib-opencl-extensions/checkstyle.html#net.finmath.opencl.montecarlo.package-info.java">net/finmath/opencl/montecarlo/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://finmath.net/finmath-lib-opencl-extensions/checkstyle.html#net.finmath.opencl.montecarlo.RandomVariableOpenCL.java">net/finmath/opencl/montecarlo/RandomVariableOpenCL.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://finmath.net/finmath-lib-opencl-extensions/checkstyle.html#net.finmath.opencl.montecarlo.RandomVariableOpenCLFactory.java">net/finmath/opencl/montecarlo/RandomVariableOpenCLFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
                       </tbody>
         </table>
         
