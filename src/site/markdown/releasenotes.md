@@ -6,6 +6,15 @@ finmath lib opencl extensions Release Notes
 # Release Notes
 
 
+## 5.1.3 (14.03.2021)
+
+### General
+
+ - Longer time to wait for GC to remove objects.
+ - Clean up.
+ - Shorter units tests.
+ 
+
 ## 5.1.1 (11.03.2021)
 
 ### General
