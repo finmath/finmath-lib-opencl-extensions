@@ -151,17 +151,17 @@ public class RandomVariableOpenCL implements RandomVariable {
 		/**
 		 * Percentage of device memory at which we will trigger System.gc() to aggressively reduce references.
 		 */
-		private final float	vectorsRecyclerPercentageFreeToStartGC		= 0.05f;		// should be set by monitoring GPU mem
+		private final float	vectorsRecyclerPercentageFreeToStartGC		= 0.15f;		// should be set by monitoring GPU mem
 
 		/**
 		 * Percentage of device memory at which we will try to wait a few milliseconds for recycled objects.
 		 */
-		private final float	vectorsRecyclerPercentageFreeToWaitForGC	= 0.02f;		// should be set by monitoring GPU mem
+		private final float	vectorsRecyclerPercentageFreeToWaitForGC	= 0.05f;		// should be set by monitoring GPU mem
 
 		/**
 		 * Maximum time to wait for object recycled objects. (Higher value slows down the code, but prevents out-of-memory).
 		 */
-		private final long	vectorsRecyclerMaxTimeOutMillis			= 10;//1000;
+		private final long	vectorsRecyclerMaxTimeOutMillis			= 1000;
 
 		private long	deviceAllocMemoryBytes = 0;
 		private long	deviceMaxMemoryBytes;
