@@ -44,5 +44,5 @@ mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -Dopencl.version=2.0 -D
 mvn verify javadoc:jar source:jar gpg:sign deploy:deploy -DskipTests=true
 
 # deploy site (clover:instrument takes a long time)
-mvn clover:instrument
+#mvn clover:instrument
 mvn site site:stage site-deploy
